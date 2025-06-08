@@ -1,0 +1,1115 @@
+{
+  "name": "Ruiu.ai Faceless Video",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "57abc74a-4999-4e29-bcbd-5da3b0b4b684",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -780,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "88c28a02-a9d7-4635-b592-f345c4769bbb",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -140
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "options": {}
+      },
+      "id": "d0e1bad0-cc00-46c8-9106-bea7112fb247",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -540,
+        260
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "17f0ea68-cb14-490c-9c91-fc4a8058273a",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[0].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5acf6626-c786-45ea-87d7-858884d61cbf",
+      "name": "Generate Image 1 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        180,
+        -460
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "hzwM2qc9HKJ6IqHx",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "31bb679b-f000-4310-946b-5710cb28a2d0",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        420,
+        -460
+      ],
+      "webhookId": "0b6138d0-4624-4e87-9196-c5ab41b90ec1"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94c6d1d1-5527-4752-a053-005f1b8561f7",
+      "name": "Get Image 1 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        640,
+        -460
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "263d026a-9678-4e36-83a7-f5c33be1a843",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        940,
+        -440
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[1].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4f351b6f-1521-4a4b-8f15-f352cea07478",
+      "name": "Generate Image 2 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        160,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "ceab3fc8-414c-42ae-a228-ca1019052d34",
+      "name": "Wait1",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        400,
+        -200
+      ],
+      "webhookId": "ca8fd918-21f0-4c2a-8edb-07fae8fcad96"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dfb4cf5f-cfa2-4203-a9f0-4f87a32a57d3",
+      "name": "Get Image 2 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        640,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "b07b6c50-04a3-40cc-adab-9c3432e66226",
+      "name": "Edit Fields2",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        940,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[2].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8b38e4ae-1924-463a-8980-c2cd5eede0cd",
+      "name": "Generate Image 3 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        160,
+        20
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "bb0d0cc2-8c97-4634-8465-011b2da67017",
+      "name": "Wait3",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        400,
+        0
+      ],
+      "webhookId": "9a7cd4db-65b4-4bc1-a602-54c61b4fb031"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d24f527b-880f-4089-8aec-115e29bf7fcf",
+      "name": "Get Image 3 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        620,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e362d5f8-03db-481c-897a-098a58b18dec",
+      "name": "Edit Fields3",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        920,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[3].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "0e9badb8-5830-46f7-a6bf-76d331fb6c51",
+      "name": "Generate Image 4 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        160,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "8ae7abc4-a933-4802-916b-cf2ea68d0804",
+      "name": "Wait5",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        420,
+        260
+      ],
+      "webhookId": "182c4b94-bb65-488f-a113-d87900f19f02"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "21a8472e-24c5-4fb0-8100-a619ff99a954",
+      "name": "Get Image 4 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        620,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[4].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "6c0d148b-f81a-4b45-ad8f-245367610528",
+      "name": "Generate Image 5 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        140,
+        520
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "ac9cdf7a-19c2-455e-a27b-cfcdaff89efc",
+      "name": "Wait7",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        420,
+        520
+      ],
+      "webhookId": "5633810b-0131-4266-a392-0ae5cb536c1a"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4460b5e4-dd6a-4eec-93ae-6a72578f4d67",
+      "name": "Get Image 5 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        640,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.images[5].prompt }}"
+            },
+            {
+              "name": "num_images",
+              "value": "1"
+            },
+            {
+              "name": "width",
+              "value": "1024"
+            },
+            {
+              "name": "height",
+              "value": "1024"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "19249848-d414-4c04-a60d-2d8060d17bcc",
+      "name": "Generate Image 6 - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        160,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "seconds"
+      },
+      "id": "81598c11-4f18-4d09-98b8-3b76702055bb",
+      "name": "Wait8",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        380,
+        760
+      ],
+      "webhookId": "8e69756f-0815-440f-bdda-7e8b89731551"
+    },
+    {
+      "parameters": {
+        "url": "https://cloud.leonardo.ai/api/rest/v1/generations/{{ $json.generation_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d01837df-3532-4e39-a218-b2e08a74cafd",
+      "name": "Get Image 6 URL - LeonardoAI",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        660,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "95ced879-0188-41a6-8340-76e38140743e",
+      "name": "Edit Fields6",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        920,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "d9f4cde5-581f-4246-bed9-b5c1e31f061b",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2.1,
+      "position": [
+        1260,
+        -280
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.creatomate.com/v1/renders",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "template_id",
+              "value": "your-template-id"
+            },
+            {
+              "name": "modifications",
+              "value": "={{ { \"Image-1\": $json.image1, \"Image-2\": $json.image2, \"Image-3\": $json.image3, \"Image-4\": $json.image4, \"Image-5\": $json.image5, \"Image-6\": $json.image6 } }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2420fcc7-b2ff-4b12-8143-9da5e9c55837",
+      "name": "Cre - Generate Video1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1180,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "seconds"
+      },
+      "id": "34fadfb9-de9f-4804-ab08-d311db57643e",
+      "name": "Wait9",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        280
+      ],
+      "webhookId": "26c7820f-02f9-4dd6-abff-3a4ee3246e74"
+    },
+    {
+      "parameters": {
+        "url": "https://api.creatomate.com/v1/renders/{{ $json.render_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.api_key }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ea3a950b-33b6-4069-aed6-5a75a5b16d9f",
+      "name": "Cre - Get Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1660,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "@yourchannel",
+        "text": "New video created!",
+        "additionalFields": {}
+      },
+      "id": "31efedbb-c529-4345-b1e1-9a1c1a7b0c2d",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        1980,
+        160
+      ],
+      "webhookId": "b7c1687b-398f-4073-abfd-8f2f4a07f2da"
+    },
+    {
+      "parameters": {},
+      "id": "4b219b1e-7baa-4c4d-a898-06fa555a08fc",
+      "name": "YouTube",
+      "type": "n8n-nodes-base.youtube",
+      "typeVersion": 1,
+      "position": [
+        1980,
+        400
+      ],
+      "credentials": {}
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4cc5c5f6-52d5-4092-8658-f59aed7e22ea",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        900,
+        320
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Image 1 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Image 2 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Image 3 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Image 4 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Image 5 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Image 6 - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image 1 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Image 1 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 1 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image 2 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Get Image 2 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 2 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Generate Image 3 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait3": {
+      "main": [
+        [
+          {
+            "node": "Get Image 3 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 3 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image 4 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait5": {
+      "main": [
+        [
+          {
+            "node": "Get Image 4 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 4 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image 5 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait7": {
+      "main": [
+        [
+          {
+            "node": "Get Image 5 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 5 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image 6 - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Wait8",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait8": {
+      "main": [
+        [
+          {
+            "node": "Get Image 6 URL - LeonardoAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image 6 URL - LeonardoAI": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Cre - Generate Video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cre - Generate Video1": {
+      "main": [
+        [
+          {
+            "node": "Wait9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait9": {
+      "main": [
+        [
+          {
+            "node": "Cre - Get Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cre - Get Video": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "9ca5199e-cde8-4585-b872-2c7650dba91a",
+  "meta": {
+    "instanceId": "512532b02d778d6ea50a0400d50851ebda9bfe0781b87a039b145894c40f0095"
+  },
+  "id": "h6TWXjFOAGY9gOXG",
+  "tags": []
+}
